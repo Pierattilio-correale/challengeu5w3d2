@@ -17,13 +17,14 @@ import java.io.IOException;
 import java.util.List;
 @RestController
 @RequestMapping("/dipendenti")
+@PreAuthorize("hasAuthority('ADMIN')")
 
 public class DipendenteController {
 @Autowired
     private DipendenteService dipendenteService;
 
 @PostMapping("")
-@PreAuthorize("hasAuthority('ADMIN')")
+
     public Dipendente creaDipendente(@RequestBody  @Validated  DipendenteDto dipendenteDto, BindingResult bindingResult) throws ValidationException, AlreadyExistException {
     if(bindingResult.hasErrors()){
         throw new ValidationException(bindingResult.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).reduce("",(e, s)->e+s));
@@ -32,17 +33,17 @@ public class DipendenteController {
     return dipendenteService.saveDipendente(dipendenteDto);
 }
 @GetMapping("")
-@PreAuthorize("hasAuthority('ADMIN')")
+
     public List<Dipendente> getAllDipendenti(){
     return  dipendenteService.trovaTuttiIDipendenti();
 }
 @GetMapping("/{id}")
-@PreAuthorize("hasAuthority('ADMIN')")
+
     public Dipendente getDipendente(@PathVariable  int id) throws NotFoundException {
     return  dipendenteService.getDipendente(id);
 }
 @PutMapping("/{id}")
-@PreAuthorize("hasAuthority('ADMIN')")
+
 public Dipendente aggiornaDipendente(@PathVariable int id ,@RequestBody @Validated DipendenteDto dipendenteDto,BindingResult bindingResult) throws ValidationException, NotFoundException {
     if(bindingResult.hasErrors()){
         throw new ValidationException(bindingResult.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).reduce("",(e, s)->e+s));
@@ -53,12 +54,12 @@ public Dipendente aggiornaDipendente(@PathVariable int id ,@RequestBody @Validat
 
 }
 @PatchMapping("/{id}")
-@PreAuthorize("hasAuthority('ADMIN')")
+
 public String patchImgDipendente(@PathVariable int id , @RequestBody MultipartFile file) throws NotFoundException, IOException {
 return dipendenteService.patchDipendente(id,file);
 }
 @DeleteMapping("/{id}")
-@PreAuthorize("hasAuthority('ADMIN')")
+
 public void deleDipendente(@PathVariable int id) throws NotFoundException {
     dipendenteService.deleteDipendente(id);
 }
