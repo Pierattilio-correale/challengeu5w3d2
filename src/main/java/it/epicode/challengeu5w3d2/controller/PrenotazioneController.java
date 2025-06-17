@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/prenotazioni")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class PrenotazioneController {
     @Autowired
     private PrenotazioneService prenotazioneService;
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public Prenotazione creaPrenotazione(@RequestBody @Validated PrenotazioneDto prenotazioneDto,
                                          BindingResult bindingResult)
             throws ValidationException, AlreadyExistException, NotFoundException {
@@ -34,7 +35,7 @@ public class PrenotazioneController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public Page<Prenotazione> getAllPrenotazioni(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -43,13 +44,13 @@ public class PrenotazioneController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public Prenotazione getPrenotazione(@PathVariable int id) throws NotFoundException {
         return prenotazioneService.getPrenotazione(id);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public Prenotazione aggiornaPrenotazione(@PathVariable int id,
                                              @RequestBody @Validated PrenotazioneDto prenotazioneDto,
                                              BindingResult bindingResult)
@@ -65,7 +66,7 @@ public class PrenotazioneController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+   
     public void eliminaPrenotazione(@PathVariable int id) throws NotFoundException {
         prenotazioneService.deletePrenotazione(id);
     }
