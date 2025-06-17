@@ -42,6 +42,7 @@ public class DipendenteController {
     return  dipendenteService.getDipendente(id);
 }
 @PutMapping("/{id}")
+@PreAuthorize("hasAuthority('ADMIN')")
 public Dipendente aggiornaDipendente(@PathVariable int id ,@RequestBody @Validated DipendenteDto dipendenteDto,BindingResult bindingResult) throws ValidationException, NotFoundException {
     if(bindingResult.hasErrors()){
         throw new ValidationException(bindingResult.getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).reduce("",(e, s)->e+s));

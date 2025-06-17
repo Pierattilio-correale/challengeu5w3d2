@@ -8,6 +8,7 @@ import it.epicode.challengeu5w3d2.model.Prenotazione;
 import it.epicode.challengeu5w3d2.service.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class PrenotazioneController {
     private PrenotazioneService prenotazioneService;
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Prenotazione creaPrenotazione(@RequestBody @Validated PrenotazioneDto prenotazioneDto,
                                          BindingResult bindingResult)
             throws ValidationException, AlreadyExistException, NotFoundException {
@@ -32,6 +34,7 @@ public class PrenotazioneController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Prenotazione> getAllPrenotazioni(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -40,11 +43,13 @@ public class PrenotazioneController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Prenotazione getPrenotazione(@PathVariable int id) throws NotFoundException {
         return prenotazioneService.getPrenotazione(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Prenotazione aggiornaPrenotazione(@PathVariable int id,
                                              @RequestBody @Validated PrenotazioneDto prenotazioneDto,
                                              BindingResult bindingResult)
@@ -60,6 +65,7 @@ public class PrenotazioneController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void eliminaPrenotazione(@PathVariable int id) throws NotFoundException {
         prenotazioneService.deletePrenotazione(id);
     }

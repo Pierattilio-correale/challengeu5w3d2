@@ -7,6 +7,7 @@ import it.epicode.challengeu5w3d2.exception.NotFoundException;
 import it.epicode.challengeu5w3d2.model.User;
 import it.epicode.challengeu5w3d2.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 public User saveUser(UserDto userDto) throws AlreadyExistException {
 
@@ -28,7 +31,7 @@ public User saveUser(UserDto userDto) throws AlreadyExistException {
     user.setNome(userDto.getNome());
     user.setCognome(userDto.getCognome());
     user.setUsername(userDto.getUsername());
-    user.setPassword(userDto.getPassword());
+    user.setPassword(passwordEncoder.encode(userDto.getPassword()));
     user.setEmail(userDto.getEmail());
     user.setRole(Role.USER);
 
@@ -48,11 +51,14 @@ public User saveUser(UserDto userDto) throws AlreadyExistException {
     public User updateUser(int id , UserDto userDto) throws NotFoundException{
         User userDaAggiornare = getUser(id);
 
-        userDaAggiornare.setPassword(userDto.getPassword());
+
         userDaAggiornare.setNome(userDto.getNome());
         userDaAggiornare.setUsername(userDto.getUsername());
         userDaAggiornare.setCognome(userDto.getCognome());
         userDaAggiornare.setEmail(userDto.getEmail());
+        if(!passwordEncoder.matches(userDto.getPassword(), userDaAggiornare.getPassword())){
+            userDaAggiornare.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
 
 
         return userRepository.save(userDaAggiornare);
